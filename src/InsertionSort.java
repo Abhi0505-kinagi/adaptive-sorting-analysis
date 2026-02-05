@@ -1,6 +1,6 @@
 public class InsertionSort{
     //time complexity of the algoritm is n^2
-    public static void sortData(int[] res){
+    public static void sort(int[] res){
         for(int i=1;i<res.length;i++){
             int temp=res[i];
             int j=i-1;
