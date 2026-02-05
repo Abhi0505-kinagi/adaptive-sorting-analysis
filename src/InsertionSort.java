@@ -11,12 +11,4 @@ public class InsertionSort{
             res[j+1]=temp;
         }
     }
-    public static void main(String[] args){
-        System.out.println("Insertion Sort :");
-        int[] arr={1,3,2,6,5,4};
-        sortData(arr);
-        for(int num:arr){
-            System.out.print(num+" ");
-        }
-    }
 }
