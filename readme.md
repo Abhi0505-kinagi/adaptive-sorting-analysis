@@ -1,258 +1,61 @@
+# Performance Analysis of an Adaptive Sorting Algorithm Based on Input Characteristics
 
+[![Language: Java](https://img.shields.io/badge/Language-Java-orange.svg)](https://www.oracle.com/java/)
+[![Field: Computer Science](https://img.shields.io/badge/Field-CS%20Research-blue.svg)]()
 
-\# Adaptive Sorting Algorithm – Performance Analysis
-
-
-
-This repository contains the implementation and experimental evaluation of an \*\*Adaptive Sorting Algorithm\*\* that dynamically selects an appropriate sorting technique based on input characteristics such as dataset size, degree of disorder, and presence of duplicate elements.
-
-
-
-The project is part of a research study titled:
-
-
-
-\*\*“Performance Analysis of an Adaptive Sorting Algorithm Based on Input Characteristics”\*\*
-
-
+This repository contains the implementation and experimental evaluation of an **Adaptive Sorting Algorithm** designed to dynamically select optimal sorting strategies based on real-time data metrics. This project was developed as part of a formal research study at **PES University**.
 
 ---
 
+## 🧠 Abstract & Motivation
+Traditional sorting algorithms like Quick Sort or Insertion Sort have specific "blind spots" where their performance degrades significantly (e.g., Quick Sort's $O(n^2)$ worst-case or Insertion Sort's inefficiency with large datasets). 
 
+This research explores a **Meta-Algorithm** that pre-analyzes input arrays to identify:
+* **Disorder Ratio:** The degree of unsortedness.
+* **Duplicate Ratio:** The frequency of repeated elements.
+* **Input Size ($n$):** The scale of the dataset.
 
-\## 📌 Motivation
-
-
-
-Traditional sorting algorithms such as \*\*Insertion Sort\*\*, \*\*Merge Sort\*\*, and \*\*Quick Sort\*\* perform efficiently only under specific input conditions. However, real-world data often exhibits varying patterns, which may lead to suboptimal performance when using a fixed sorting strategy.
-
-
-
-This project explores an \*\*adaptive approach\*\* that analyzes the input data and selects the most suitable sorting algorithm at runtime to improve robustness and avoid worst-case behavior.
-
-
+By selecting the algorithm at runtime, we aim to achieve **robustness**—ensuring that the system never falls into a worst-case performance trap.
 
 ---
 
+## 🛠️ Adaptive Strategy Logic
 
+The `Analyzer.java` component evaluates the input and applies the following heuristic:
 
-\## 🧠 Adaptive Strategy
-
-
-
-The adaptive algorithm analyzes the input array using the following metrics:
-
-
-
-\* \*\*Input Size\*\*
-
-\* \*\*Disorder Ratio\*\* – Measures how unsorted the array is
-
-\* \*\*Duplicate Ratio\*\* – Measures the proportion of repeated elements
-
-
-
-\### Algorithm Selection Rules
-
-
-
-| Condition                         | Selected Algorithm |
-
-| --------------------------------- | ------------------ |
-
-| Small input or nearly sorted data | Insertion Sort     |
-
-| High duplicate ratio              | Merge Sort         |
-
-| Otherwise                         | Quick Sort         |
-
-
+| Condition | Selected Algorithm | Complexity |
+| :--- | :--- | :--- |
+| $n < 50$ OR Nearly Sorted | **Insertion Sort** | $O(n)$ to $O(n^2)$ |
+| High Duplicate Ratio (> 30%) | **Merge Sort** | $O(n \log n)$ |
+| General / Random Distribution | **Quick Sort** | $O(n \log n)$ avg |
 
 ---
 
+## 📊 Performance Benchmarks
 
+Below is a comparison of execution times (in nanoseconds) across varying input sizes. 
 
-\## 🗂️ Project Structure
+### 1. Comparative Growth (Log-Log Plot)
+To visualize the difference between $O(n^2)$ and $O(n \log n)$ growth, we use a logarithmic scale. 
+![Insert your Log Plot here]
 
-
-
-```
-
-Adaptive\_sorting\_research/
-
-│
-
-├── Analyzer.java           # Input analysis (disorder \& duplicate ratios)
-
-├── InsertionSort.java      # Insertion Sort implementation
-
-├── MergeSort.java          # Merge Sort implementation
-
-├── QuickSort.java          # Quick Sort (randomized pivot)
-
-├── ExperimentRunner.java   # Adaptive sorting execution
-
-├── BenchmarkRunner.java    # Performance benchmarking
-
-└── README.md               # Project documentation
-
-```
-
-
+### 2. Large Scale Comparison ($n = 1,000,000$)
+At peak load, the Adaptive Sort avoids the quadratic explosion seen in Insertion Sort.
+![Insert your Bar Graph here]
 
 ---
 
-
-
-\## ⚙️ Implementation Details
-
-
-
-\* \*\*Language:\*\* Java
-
-\* \*\*Time Measurement:\*\* `System.nanoTime()`
-
-\* \*\*Datasets:\*\* Synthetic datasets (random, nearly sorted, reverse sorted)
-
-\* \*\*Input Size Range:\*\* 1,000 to 1,000,000 elements
-
-
-
-Benchmarks were executed multiple times, and average execution times were recorded.
-
-
-
----
-
-
-
-\## 📊 Experimental Results (Summary)
-
-
-
-\* \*\*Insertion Sort\*\* performs well only for small or nearly sorted inputs.
-
-\* \*\*Merge Sort\*\* provides stable performance for large datasets and high duplicates.
-
-\* \*\*Quick Sort\*\* achieves the lowest execution time for random datasets.
-
-\* \*\*Adaptive Sort\*\* introduces analysis overhead but delivers consistent and robust performance across diverse input patterns.
-
-
-
----
-
-
-
-\## 📈 Key Observation
-
-
-
-Although the adaptive approach incurs additional overhead due to input analysis, it successfully avoids worst-case behavior and provides reliable performance when input characteristics are unpredictable.
-
-
-
----
-
-
-
-\## 📄 Research Paper
-
-
-
-The complete research paper detailing the methodology, experimental setup, and results is included separately and can be referenced alongside this repository.
-
-
-
----
-
-
-
-\## 🚀 How to Run
-
-
-
-1\. Compile all Java files:
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  javac \*.java
-
-&nbsp;  ```
-
-
-
-2\. Run adaptive sorting experiment:
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  java ExperimentRunner
-
-&nbsp;  ```
-
-
-
-3\. Run performance benchmarks:
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  java BenchmarkRunner
-
-&nbsp;  ```
-
-
-
----
-
-
-
-\## 🔮 Future Work
-
-
-
-\* Extend adaptive logic to include \*\*TimSort\*\* and \*\*Heap Sort\*\*
-
-\* Optimize input analysis to reduce overhead
-
-\* Evaluate performance on real-world datasets
-
-\* Explore parallel and multi-threaded implementations
-
-
-
----
-
-
-
-\## 👤 Author
-
-
-
-\*\*Abhishek Hanamant Kinagi\*\*
-
-Department of Computer Science and Engineering
-
-Email: \[kinagiabhishek842@gmail.com](mailto:kinagiabhishek842@gmail.com)
-
-
-
----
-
-
-
-\## ⭐ Acknowledgements
-
-
-
-This project was developed as part of academic research on adaptive algorithms and performance analysis.
-
-
-
-
-
+## 📂 Project Structure
+
+```text
+Adaptive_sorting_research/
+├── Analyzer.java           # Calculates disorder & duplicate ratios
+├── InsertionSort.java      # Optimized Insertion Sort
+├── MergeSort.java          # Standard Merge Sort (Stable)
+├── QuickSort.java          # Randomized Pivot Quick Sort
+├── ExperimentRunner.java    # The Adaptive Logic Implementation
+├── BenchmarkRunner.java     # Automated Data Collection Utility
+└── README.md               # Documentation
+
+##clone repo
+git clone [https://github.com/Abhi0505-kinagi/adaptive-sorting-analysis.git](https://github.com/Abhi0505-kinagi/adaptive-sorting-analysis.git)
