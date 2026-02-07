@@ -11,7 +11,7 @@ public class BenchmarkRunner {
     }
 
     public static void main(String[] args) {
-        int[] sizes = {1000, 5000, 10000};
+        int[] sizes = {1000, 5000, 10000,100000,1000000};
         System.out.println("------------------------------");
         for (int n : sizes) {
             int[] base = ExperimentRunner.getRandom(n);

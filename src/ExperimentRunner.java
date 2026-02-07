@@ -50,26 +50,42 @@ public class ExperimentRunner {
         return arr;
     }
     public static void main(String[] args){
-        int[] arr=getRandom(100);
+        int[] arr=getNearlySorted(1000);
+        /*int[] arr= {
+    5, 12, 7, 5, 9, 12, 7, 5, 3, 9, 12, 7, 5, 3, 9, 12, 7, 5, 3, 9,
+    8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+    33, 33, 33, 33, 33, 33, 33, 33, 33, 33,
+    42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
+    64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+    18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
+    50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
+    27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+    11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+    6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+        };*/
         double disorder = Analyzer.disorderRatio(arr);
         double duplicates = Analyzer.duplicateRatio(arr);
         if (arr.length < 50 || disorder<0.05) {
             InsertionSort.sort(arr);
-            System.out.println("Insertionsort is used for sorting..");
+            System.out.println("Adaptive Sorting technique: Insertion Sort");
         }
         else if (duplicates > 0.5) {
             MergeSort.sort(arr);
-            System.out.println("Mergesort is used for sorting..");
+            System.out.println("Adaptive Sorting technique:Mergesort");
         }
         else {
             QuickSort.sort(arr);
-            System.out.println("Quick sort is used for sorting..");
+            System.out.println("Adaptive Sorting technique:Quick sort");
         }
         /*for(int num:arr){
                 System.out.print(num+" ");
             }*/
         
-        System.out.println("\nDisorder ratio: " + String.format("%.3f", disorder));
+        System.out.println("Disorder ratio: " + String.format("%.3f", disorder));
         System.out.println("Duplicate ratio: " + String.format("%.3f", duplicates));
 
         
