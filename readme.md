@@ -1,4 +1,4 @@
-![Project](https://img.shields.io/badge/Project-NeuroSort%3A%20Random%20Forest--Driven%20Adaptive%20Sorting-blue?style=for-the-badge)
+![Project](https://img.shields.io/badge/Project-NeuroSort%3A%20Random%20Forest--Driven%20Adaptive%20Sorting-blue?style=for-the-badge) <br/>
 ![Focus](https://img.shields.io/badge/Focus-Adaptive%20Algorithms-blue)
 ![Category](https://img.shields.io/badge/Domain-Data%20Structures%20%26%20Algorithms-orange)
 
