@@ -1,61 +1,69 @@
-# Performance Analysis of an Adaptive Sorting Algorithm Based on Input Characteristics
+# Adaptive Sorting Research
 
-[![Language: Java](https://img.shields.io/badge/Language-Java-orange.svg)](https://www.oracle.com/java/)
-[![Field: Computer Science](https://img.shields.io/badge/Field-CS%20Research-blue.svg)]()
+## Project Overview
 
-This repository contains the implementation and experimental evaluation of an **Adaptive Sorting Algorithm** designed to dynamically select optimal sorting strategies based on real-time data metrics. This project was developed as part of a formal research study at **PES University**.
+This project compares adaptive sorting strategies using dataset analytics and a learned model.
+It provides:
+- `InsertionSort`, `QuickSort`, `MergeSort`, `HeapSort` implementations.
+- `Analyzer` feature extraction (sortedness, inversion ratio, duplicate ratio, entropy).
+- `predict_sort.py` Python model inference that chooses the best algorithm for a given array.
+- `AdaptiveSort` Java class that routes to predicted sort and fallback to `MergeSort`.
+- `ExperimentRunner` Java demo for a sample dataset using the full feature pipeline.
 
----
+## Current Implementation (as of latest code)
 
-## 🧠 Abstract & Motivation
-Traditional sorting algorithms like Quick Sort or Insertion Sort have specific "blind spots" where their performance degrades significantly (e.g., Quick Sort's $O(n^2)$ worst-case or Insertion Sort's inefficiency with large datasets). 
+### Analyzer metrics
+- `sortedness(arr)` = fraction of non-decreasing adjacent pairs.
+- `inversionRatio(arr)` = fraction of adjacent inversions.
+- `duplicateRatio(arr)` = 1 - (#unique / n).
+- `entropy(arr)` = Shannon entropy of value frequency distribution.
 
-This research explores a **Meta-Algorithm** that pre-analyzes input arrays to identify:
-* **Disorder Ratio:** The degree of unsortedness.
-* **Duplicate Ratio:** The frequency of repeated elements.
-* **Input Size ($n$):** The scale of the dataset.
+### Prediction pipeline
+- `AdaptiveSort.sort(arr)` computes features via `Analyzer`.
+- Calls `predictAlgorithm(...)` to run `python predict_sort.py n sortedness inversionRatio duplicateRatio entropy`.
+- `predict_sort.py` loads `pairwise_scaler.pkl` and `pairwise_models.pkl` and returns one of: `Insertion`, `Merge`, `Quick`, `Heap`.
+- `AdaptiveSort` executes the predicted algorithm.
+- If prediction fails, falls back to `MergeSort`.
 
-By selecting the algorithm at runtime, we aim to achieve **robustness**—ensuring that the system never falls into a worst-case performance trap.
+### ExperimentRunner sample
+- Runs one hard-coded array in `ExperimentRunner.main(...)`.
+- Prints predicted algorithm and selected sort outcome.
+- Prints metrics:
+  - `n`
+  - `Sortedness`
+  - `Inversion Ratio`
+  - `Duplicate Ratio`
+  - `Entropy`
 
----
+## Running
 
-## 🛠️ Adaptive Strategy Logic
+Prerequisites:
+- Java 17+ (or compatible JDK)
+- Python 3.x and `joblib`, `pandas`
+- `pairwise_scaler.pkl`, `pairwise_models.pkl` in the same directory as `predict_sort.py`
 
-The `Analyzer.java` component evaluates the input and applies the following heuristic:
+Build and run:
 
-| Condition | Selected Algorithm | Complexity |
-| :--- | :--- | :--- |
-| $n < 50$ OR Nearly Sorted | **Insertion Sort** | $O(n)$ to $O(n^2)$ |
-| High Duplicate Ratio (> 30%) | **Merge Sort** | $O(n \log n)$ |
-| General / Random Distribution | **Quick Sort** | $O(n \log n)$ avg |
+```bash
+cd src
+javac *.java
+java ExperimentRunner
+```
 
----
+or use adaptive class directly:
 
-## 📊 Performance Benchmarks
+```bash
+java AdaptiveSort
+```
 
-Below is a comparison of execution times (in nanoseconds) across varying input sizes. 
+## Notes and future improvements
 
-### 1. Comparative Growth (Log-Log Plot)
-To visualize the difference between $O(n^2)$ and $O(n \log n)$ growth, we use a logarithmic scale. 
-![Insert your Log Plot here]
+- The current implementation does not yet contain a hybrid method (Merge+Insertion) per TIMSort pattern.
+- `ExperimentRunner` does not yet benchmark multiple algorithms side-by-side or produce graphs.
+- You may implement the recommended adaptive/hybrid behavior in `MergeSort` and/or `AdaptiveSort` and update this README accordingly.
 
-### 2. Large Scale Comparison ($n = 1,000,000$)
-At peak load, the Adaptive Sort avoids the quadratic explosion seen in Insertion Sort.
-![Insert your Bar Graph here]
+## Recommended next steps
 
----
-
-## 📂 Project Structure
-
-```text
-Adaptive_sorting_research/
-├── Analyzer.java           # Calculates disorder & duplicate ratios
-├── InsertionSort.java      # Optimized Insertion Sort
-├── MergeSort.java          # Standard Merge Sort (Stable)
-├── QuickSort.java          # Randomized Pivot Quick Sort
-├── ExperimentRunner.java    # The Adaptive Logic Implementation
-├── BenchmarkRunner.java     # Automated Data Collection Utility
-└── README.md               # Documentation
-
-##clone repo
-git clone [https://github.com/Abhi0505-kinagi/adaptive-sorting-analysis.git](https://github.com/Abhi0505-kinagi/adaptive-sorting-analysis.git)
+1. Add a dedicated `AdaptiveSort.bench(...)` for measuring actual runtime of predicted vs each candidate algorithm.
+2. Add new `results/` CSV output and charting.
+3. Add unit tests for model predictions and metric edge cases.
