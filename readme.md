@@ -1,69 +1,84 @@
-# Adaptive Sorting Research
+![Project](https://img.shields.io/badge/Project-NeuroSort%3A%20Random%20Forest--Driven%20Adaptive%20Sorting-blue?style=for-the-badge)
+![Focus](https://img.shields.io/badge/Focus-Adaptive%20Algorithms-blue)
+![Category](https://img.shields.io/badge/Domain-Data%20Structures%20%26%20Algorithms-orange)
 
-## Project Overview
+![Languages](https://img.shields.io/badge/Languages-Java%20%7C%20Python-yellow)
+![ML](https://img.shields.io/badge/ML-Random%20Forest-green)
+![Concept](https://img.shields.io/badge/Concept-Adaptive%20Sorting-purple)
+---
+# Project Overview
+<br/><i>The system analyzes statistical properties of an input array and dynamically selects the most efficient sorting algorithm.<i/><br/>
+NeuroSort is an intelligent meta-algorithm that solves the "optimal sorting" problem not through static thresholds, but through a trained Random Forest Classifier. By extracting high-dimensional features from a dataset, it predicts which sorting implementation will yield the lowest latency for that specific data distribution.
+The system combines:
 
-This project compares adaptive sorting strategies using dataset analytics and a learned model.
-It provides:
-- `InsertionSort`, `QuickSort`, `MergeSort`, `HeapSort` implementations.
-- `Analyzer` feature extraction (sortedness, inversion ratio, duplicate ratio, entropy).
-- `predict_sort.py` Python model inference that chooses the best algorithm for a given array.
-- `AdaptiveSort` Java class that routes to predicted sort and fallback to `MergeSort`.
-- `ExperimentRunner` Java demo for a sample dataset using the full feature pipeline.
+- Data structure algorithms
+- Dataset analytics
+- Machine learning prediction
+to intelligently determine the best sorting strategy.
 
-## Current Implementation (as of latest code)
+---
+---
 
-### Analyzer metrics
-- `sortedness(arr)` = fraction of non-decreasing adjacent pairs.
-- `inversionRatio(arr)` = fraction of adjacent inversions.
-- `duplicateRatio(arr)` = 1 - (#unique / n).
-- `entropy(arr)` = Shannon entropy of value frequency distribution.
+# Key Features
 
-### Prediction pipeline
-- `AdaptiveSort.sort(arr)` computes features via `Analyzer`.
-- Calls `predictAlgorithm(...)` to run `python predict_sort.py n sortedness inversionRatio duplicateRatio entropy`.
-- `predict_sort.py` loads `pairwise_scaler.pkl` and `pairwise_models.pkl` and returns one of: `Insertion`, `Merge`, `Quick`, `Heap`.
-- `AdaptiveSort` executes the predicted algorithm.
-- If prediction fails, falls back to `MergeSort`.
+## 1. Intelligent Feature Extraction (Analyzer.java)
 
-### ExperimentRunner sample
-- Runs one hard-coded array in `ExperimentRunner.main(...)`.
-- Prints predicted algorithm and selected sort outcome.
-- Prints metrics:
-  - `n`
-  - `Sortedness`
-  - `Inversion Ratio`
-  - `Duplicate Ratio`
-  - `Entropy`
+The system computes multiple dataset metrics in **O(n)** time.
 
-## Running
+Metrics include:
 
-Prerequisites:
-- Java 17+ (or compatible JDK)
-- Python 3.x and `joblib`, `pandas`
-- `pairwise_scaler.pkl`, `pairwise_models.pkl` in the same directory as `predict_sort.py`
+- **Sortedness**  
+  Measures how close the array is to being already sorted.
 
-Build and run:
+- **Inversion Ratio**  
+  Indicates the level of disorder in the dataset.
 
-```bash
-cd src
-javac *.java
-java ExperimentRunner
-```
+- **Duplicate Ratio**  
+  Detects repetition-heavy datasets.
 
-or use adaptive class directly:
+- **Shannon Entropy**  
+  Measures information density and randomness.
 
-```bash
-java AdaptiveSort
-```
+These features form the **statistical fingerprint of the dataset**.
 
-## Notes and future improvements
+---
 
-- The current implementation does not yet contain a hybrid method (Merge+Insertion) per TIMSort pattern.
-- `ExperimentRunner` does not yet benchmark multiple algorithms side-by-side or produce graphs.
-- You may implement the recommended adaptive/hybrid behavior in `MergeSort` and/or `AdaptiveSort` and update this README accordingly.
+## 2. Polyglot Inference Bridge
 
-## Recommended next steps
+The project integrates **Java and Python**:
 
-1. Add a dedicated `AdaptiveSort.bench(...)` for measuring actual runtime of predicted vs each candidate algorithm.
-2. Add new `results/` CSV output and charting.
-3. Add unit tests for model predictions and metric edge cases.
+- **Java**  
+  Handles dataset processing and sorting execution.
+
+- **Python**  
+  Runs the trained ML model to predict the optimal algorithm.
+
+The Python script `predict_sort.py` loads:
+
+---
+
+# Running the Project
+
+### Requirements
+
+- Java 17+
+- Python 3.x
+- Python libraries
+
+---
+
+# Future Improvements
+
+Planned enhancements include:
+
+- Hybrid Merge + Insertion sort (similar to TIMSort)
+- Benchmark comparison between algorithms
+- Runtime visualization and performance graphs
+- Larger training dataset for the ML model
+- Automatic dataset generation for testing
+
+<h3 style="font-family: 'Times New Roman', Times, serif;"> Author</h3>
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Abhishek%20Kinagi-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/abhishek-kinagi-b61a47328/)
+
+[![Email](https://img.shields.io/badge/Email-kinagiabhishek842%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:kinagiabhishek842@gmail.com)
