@@ -1,9 +1,9 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 public class ExperimentRunner {
-    
-    //Generates a Reverse Sorted Array: [n, n-1, ..., 1]
-     
+
     public static int[] getReverseSorted(int n) {
         int[] arr = new int[n];
         for (int i = 0; i < n; i++) {
@@ -12,14 +12,12 @@ public class ExperimentRunner {
         return arr;
     }
 
-    // Generates a Random Array using Fisher-Yates shuffle
-     
     public static int[] getRandom(int n) {
         int[] arr = new int[n];
         for (int i = 0; i < n; i++) {
             arr[i] = i + 1;
         }
-        
+
         Random rand = new Random();
         for (int i = n - 1; i > 0; i--) {
             int j = rand.nextInt(i + 1);
@@ -30,7 +28,6 @@ public class ExperimentRunner {
         return arr;
     }
 
-    //Generates a Nearly Sorted Array:Starts sorted, then swaps a small number of random pairs.
     public static int[] getNearlySorted(int n) {
         int[] arr = new int[n];
         for (int i = 0; i < n; i++) {
@@ -38,8 +35,7 @@ public class ExperimentRunner {
         }
 
         Random rand = new Random();
-        // Swapping roughly 5% of the elements creates a "nearly sorted" state
-        int swaps = Math.max(1, n / 20); 
+        int swaps = Math.max(1, n / 20);
         for (int i = 0; i < swaps; i++) {
             int idx1 = rand.nextInt(n);
             int idx2 = rand.nextInt(n);
@@ -49,46 +45,91 @@ public class ExperimentRunner {
         }
         return arr;
     }
-    public static void main(String[] args){
-        int[] arr=getNearlySorted(1000);
-        /*int[] arr= {
-    5, 12, 7, 5, 9, 12, 7, 5, 3, 9, 12, 7, 5, 3, 9, 12, 7, 5, 3, 9,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-    21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
-    33, 33, 33, 33, 33, 33, 33, 33, 33, 33,
-    42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
-    99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-    77, 77, 77, 77, 77, 77, 77, 77, 77, 77,
-    64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
-    18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
-    50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
-    27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-    11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 6
-        };*/
-        double disorder = Analyzer.disorderRatio(arr);
-        double duplicates = Analyzer.duplicateRatio(arr);
-        if (arr.length < 50 || disorder<0.05) {
-            InsertionSort.sort(arr);
-            System.out.println("Adaptive Sorting technique: Insertion Sort");
-        }
-        else if (duplicates > 0.5) {
-            MergeSort.sort(arr);
-            System.out.println("Adaptive Sorting technique:Mergesort");
-        }
-        else {
-            QuickSort.sort(arr);
-            System.out.println("Adaptive Sorting technique:Quick sort");
-        }
-        /*for(int num:arr){
-                System.out.print(num+" ");
-            }*/
-        
-        System.out.println("Disorder ratio: " + String.format("%.3f", disorder));
-        System.out.println("Duplicate ratio: " + String.format("%.3f", duplicates));
 
-        
+    public static String predictAlgorithmWithPython(int n, double sortedness,
+                                                    double inversionRatio,
+                                                    double duplicateRatio,
+                                                    double entropy) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                "python",
+                "predict_sort.py",
+                String.valueOf(n),
+                String.valueOf(sortedness),
+                String.valueOf(inversionRatio),
+                String.valueOf(duplicateRatio),
+                String.valueOf(entropy)
+            );
+
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(process.getInputStream())
+            );
+
+            String result = reader.readLine();
+            process.waitFor();
+
+            if (result != null) {
+                return result.trim();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Merge"; // fallback
     }
 
+    public static void main(String[] args) {
+
+        int[] arr ={1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 58, 56, 54, 52, 50, 48, 46, 44, 42, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35};
+
+        double sortedness = Analyzer.sortedness(arr);
+        double inversionRatio = Analyzer.inversionRatio(arr);
+        double duplicateRatio = Analyzer.duplicateRatio(arr);
+        double entropy = Analyzer.entropy(arr);
+
+        String predictedAlgo = predictAlgorithmWithPython(
+            arr.length,
+            sortedness,
+            inversionRatio,
+            duplicateRatio,
+            entropy
+        );
+
+        System.out.println("Predicted algorithm: " + predictedAlgo);
+
+        switch (predictedAlgo) {
+            case "Insertion":
+                InsertionSort.sort(arr);
+                System.out.println("Adaptive Sorting technique: Insertion Sort");
+                break;
+
+            case "Merge":
+                MergeSort.sort(arr);
+                System.out.println("Adaptive Sorting technique: Merge Sort");
+                break;
+
+            case "Quick":
+                QuickSort.sort(arr);
+                System.out.println("Adaptive Sorting technique: Quick Sort");
+                break;
+
+            case "Heap":
+                HeapSort.sort(arr);
+                System.out.println("Adaptive Sorting technique: Heap Sort");
+                break;
+
+            default:
+                MergeSort.sort(arr);
+                System.out.println("Fallback technique: Merge Sort");
+        }
+
+        System.out.println("n: " + arr.length);
+        System.out.println("Sortedness: " + String.format("%.4f", sortedness));
+        System.out.println("Inversion Ratio: " + String.format("%.4f", inversionRatio));
+        System.out.println("Duplicate Ratio: " + String.format("%.4f", duplicateRatio));
+        System.out.println("Entropy: " + String.format("%.4f", entropy));
+    }
 }
